@@ -5,7 +5,7 @@ namespace BMSClone.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController: ControllerBase
     {
 
         [HttpPost]
@@ -15,5 +15,13 @@ namespace BMSClone.Controllers
 
             return true;
         }
+
+        [HttpGet]
+
+        public IActionResult Get()
+        {
+            return Ok("Hello world");
+        }
+
     }
 }

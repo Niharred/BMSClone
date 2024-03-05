@@ -1,6 +1,11 @@
 using BMSClone.Context;
+using BMSClone.services;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
+
+
+var jwtIssuer = builder.Configuration.GetSection("Jwt:Issuer").Get<string>();
+var jwtkey = builder.Configuration.GetSection("Jwt:Key").Get<string>();
 
 // Add services to the container.
 
@@ -9,10 +14,20 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
 
 builder.Services.AddDbContext<DataContext>(options => { options.UseSqlServer("Server=SURUKK;Database=BMSClone;Trusted_Connection=True;TrustServerCertificate=True"); });
 builder.Services.AddScoped<DbContext, DataContext>();
+builder.Services.AddScoped<IDataservice, DataService>();
 
 var app = builder.Build();
 
