@@ -13,7 +13,7 @@ namespace BMSClone.Models
 
         public double Rating { get; set; }
 
-        public List<Language> Languages { get; set; }
+        public List<MovieLanguage> MovieLanguages { get; set; }
 
         public Show show { get; set; }
 

@@ -20,6 +20,13 @@ namespace BMSClone.Models
 
         public Theatre theatre { get; set; }
 
+        public int theatreId { get; set; }
+
+        public Hall hall { get; set; }
+
+        public int hallid { get; set; }
+
+
     }
 
 
@@ -32,6 +39,8 @@ namespace BMSClone.Models
             builder.HasOne(x => x.movie).WithOne(x => x.show).HasForeignKey<Show>(x => x.ShowId).OnDelete(DeleteBehavior.ClientSetNull);
 
             builder.HasOne(x => x.theatre).WithMany(x => x.shows).HasForeignKey(x => x.ShowId).OnDelete(DeleteBehavior.ClientSetNull);
+
+            builder.HasOne(x=>x.hall).WithOne(x=>x.show).HasForeignKey<Hall>(x => x.HallId).OnDelete(DeleteBehavior.ClientSetNull);
 
 
         }

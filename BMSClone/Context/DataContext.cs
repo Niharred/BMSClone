@@ -28,6 +28,8 @@ namespace BMSClone.Context
         public DbSet<Seat> seats { get; set; }
 
         public DbSet<ShowSeats> showSeats { get; set; }
+
+        public DbSet<MovieLanguage> movieLanguages { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new CityModelConfiguration());
@@ -38,7 +40,7 @@ namespace BMSClone.Context
             modelBuilder.ApplyConfiguration(new SeatModelConfiguration());
             modelBuilder.ApplyConfiguration(new ShowSeatsModelConfiguration());
             modelBuilder.ApplyConfiguration(new UserModelConfiguration());
-
+            modelBuilder.ApplyConfiguration(new MovieLanguageModelConfiguration());
         }
 
     }

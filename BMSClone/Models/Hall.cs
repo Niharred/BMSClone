@@ -11,8 +11,9 @@ namespace BMSClone.Models
         public List<Seat> seats { get; set; }
 
         public Theatre theatre { get; set; }
+        public int TheatreId { get; set; }
 
-        public int seatId { get; set; }
+        public Show show { get; set; }
     }
 
 
@@ -22,8 +23,8 @@ namespace BMSClone.Models
         public void Configure(EntityTypeBuilder<Hall> builder)
         {
             builder.HasKey(x => new { x.HallId });
-            builder.HasOne(x => x.theatre).WithMany(x => x.halls).HasForeignKey(x => x.HallId).OnDelete(DeleteBehavior.ClientSetNull);
-
+            builder.HasOne(x => x.theatre).WithMany(x => x.halls).HasForeignKey(x => x.TheatreId).OnDelete(DeleteBehavior.ClientSetNull);
+            builder.HasOne(x => x.show).WithOne(x => x.hall).HasForeignKey<Hall>(x => x.HallId).OnDelete(DeleteBehavior.ClientSetNull);
 
         }
 

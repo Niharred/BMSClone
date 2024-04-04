@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BMSClone.DTOs;
+using BMSClone.Models;
+using BMSClone.services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BMSClone.Controllers
@@ -8,12 +11,24 @@ namespace BMSClone.Controllers
     public class UserController: ControllerBase
     {
 
+        private IUserService _userService;
+
+        public UserController(IUserService userService)
+        {
+            _userService = userService;
+        }
+
         [HttpPost]
         [Route("/createUser")]
-        public bool createUser()
+        public async Task<User> createUser(UserDTO userDTO)
         {
+            User user = new User();
+            user.FirstName = userDTO.FirstName;
+            user.LastName = userDTO.LastName;
+            user.Email = userDTO.Email;
+            user.Password = BCrypt.Net.BCrypt.HashPassword(userDTO.Password);
+            return await _userService.createUser(user);
 
-            return true;
         }
 
         [HttpGet]
