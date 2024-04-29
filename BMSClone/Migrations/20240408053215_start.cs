@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BMSClone.Migrations
 {
-    public partial class modifiedshow : Migration
+    public partial class start : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -111,48 +111,17 @@ namespace BMSClone.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "shows",
-                columns: table => new
-                {
-                    ShowId = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    start = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    duration = table.Column<int>(type: "int", nullable: false),
-                    MovieId = table.Column<int>(type: "int", nullable: false),
-                    theatreId = table.Column<int>(type: "int", nullable: false),
-                    hallid = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_shows", x => x.ShowId);
-                    table.ForeignKey(
-                        name: "FK_shows_movies_ShowId",
-                        column: x => x.ShowId,
-                        principalTable: "movies",
-                        principalColumn: "MovieId");
-                    table.ForeignKey(
-                        name: "FK_shows_theatres_ShowId",
-                        column: x => x.ShowId,
-                        principalTable: "theatres",
-                        principalColumn: "TheatreId");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "halls",
                 columns: table => new
                 {
-                    HallId = table.Column<int>(type: "int", nullable: false),
+                    HallId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TheatreId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_halls", x => x.HallId);
-                    table.ForeignKey(
-                        name: "FK_halls_shows_HallId",
-                        column: x => x.HallId,
-                        principalTable: "shows",
-                        principalColumn: "ShowId");
                     table.ForeignKey(
                         name: "FK_halls_theatres_TheatreId",
                         column: x => x.TheatreId,
@@ -178,6 +147,39 @@ namespace BMSClone.Migrations
                         column: x => x.hallId,
                         principalTable: "halls",
                         principalColumn: "HallId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "shows",
+                columns: table => new
+                {
+                    ShowId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    start = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    duration = table.Column<int>(type: "int", nullable: false),
+                    MovieId = table.Column<int>(type: "int", nullable: false),
+                    theatreId = table.Column<int>(type: "int", nullable: false),
+                    hallid = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_shows", x => x.ShowId);
+                    table.ForeignKey(
+                        name: "FK_shows_halls_hallid",
+                        column: x => x.hallid,
+                        principalTable: "halls",
+                        principalColumn: "HallId");
+                    table.ForeignKey(
+                        name: "FK_shows_movies_MovieId",
+                        column: x => x.MovieId,
+                        principalTable: "movies",
+                        principalColumn: "MovieId");
+                    table.ForeignKey(
+                        name: "FK_shows_theatres_theatreId",
+                        column: x => x.theatreId,
+                        principalTable: "theatres",
+                        principalColumn: "TheatreId");
                 });
 
             migrationBuilder.CreateTable(
@@ -226,6 +228,22 @@ namespace BMSClone.Migrations
                 column: "hallId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_shows_hallid",
+                table: "shows",
+                column: "hallid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_shows_MovieId",
+                table: "shows",
+                column: "MovieId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_shows_theatreId",
+                table: "shows",
+                column: "theatreId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_showSeats_SeatId",
                 table: "showSeats",
                 column: "SeatId");
@@ -259,10 +277,10 @@ namespace BMSClone.Migrations
                 name: "seats");
 
             migrationBuilder.DropTable(
-                name: "halls");
+                name: "shows");
 
             migrationBuilder.DropTable(
-                name: "shows");
+                name: "halls");
 
             migrationBuilder.DropTable(
                 name: "movies");

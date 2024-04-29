@@ -7,5 +7,7 @@
         public string Genre { get; set; }
 
         public double Rating { get; set; }
+
+        public string Poster { get; set; }
     }
 }

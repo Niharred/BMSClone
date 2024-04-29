@@ -36,11 +36,11 @@ namespace BMSClone.Models
         {
             builder.HasKey(x => new { x.ShowId });
 
-            builder.HasOne(x => x.movie).WithOne(x => x.show).HasForeignKey<Show>(x => x.ShowId).OnDelete(DeleteBehavior.ClientSetNull);
+            builder.HasOne(x => x.movie).WithOne(x => x.show).HasForeignKey<Show>(x => x.MovieId).OnDelete(DeleteBehavior.ClientSetNull);
 
-            builder.HasOne(x => x.theatre).WithMany(x => x.shows).HasForeignKey(x => x.ShowId).OnDelete(DeleteBehavior.ClientSetNull);
+            builder.HasOne(x => x.theatre).WithMany(x => x.shows).HasForeignKey(x => x.theatreId).OnDelete(DeleteBehavior.ClientSetNull);
 
-            builder.HasOne(x=>x.hall).WithOne(x=>x.show).HasForeignKey<Hall>(x => x.HallId).OnDelete(DeleteBehavior.ClientSetNull);
+            builder.HasOne(x=>x.hall).WithMany(x=>x.show).HasForeignKey(x => x.hallid).OnDelete(DeleteBehavior.ClientSetNull);
 
 
         }

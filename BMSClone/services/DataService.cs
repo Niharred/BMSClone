@@ -45,6 +45,43 @@ namespace BMSClone.services
         
         }
 
+        public async Task<List<Movie>> GetMoviesByCityId(int id)
+        {
+
+            List<Movie> list = new List<Movie>();
+            List<int> showids = new List<int>();
+            List<int> movieids = new List<int>();
+
+
+            try
+            {
+                var theatres = await dbContext.Set<Theatre>().Where(x=>x.cityId==id).ToListAsync();
+
+                foreach (var theatre in theatres)
+                {
+
+                     showids = await dbContext.Set<Show>().Where(x => x.theatreId == theatre.TheatreId).Select(x=>x.ShowId).ToListAsync();
+                }
+
+                foreach (int showId in showids)
+                {
+                    movieids.Add(dbContext.Set<Show>().Where(x => x.ShowId == showId).Select(x => x.MovieId).FirstOrDefault());
+                }
+
+                foreach (int movieId in movieids)
+                {
+                    list.Add(dbContext.Set<Movie>().Where(x => x.MovieId == movieId).FirstOrDefault());
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return list;
+        }
+
+
         public async Task<List<City>> GetCities()
         {
             List<City> cities = new List<City>();
@@ -166,13 +203,40 @@ namespace BMSClone.services
             return seats;
         }
 
-        public async Task<Show> AddShows(Show show)
+        public async Task<int> AddShows(Show show)
         {
             dbContext.Set<Show>().Add(show);
             await dbContext.SaveChangesAsync();
-            return show;
+            return show.ShowId;
         }
 
+        public async Task<List<Seat>> GetSeatsByHallId(int hallid)
+        {
+            List<Seat> seats = new List<Seat>();
+            try
+            {
+                seats = await dbContext.Set<Seat>().Where(x => x.hallId == hallid).ToListAsync();
+
+            }
+            catch (Exception ex)
+            {
+            }
+            return seats;
+        }
+
+        public async Task<ShowSeats> AddShowSeats(int seatId, int showId)
+        {
+
+            ShowSeats showSeats = new ShowSeats();
+            showSeats.SeatId = seatId;
+            showSeats.ShowId = showId;
+            await dbContext.Set<ShowSeats>().AddAsync(showSeats);
+            dbContext.SaveChangesAsync();
+            return showSeats;
+        
+        
+        
+        }
 
     }
 }

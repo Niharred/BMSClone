@@ -11,6 +11,7 @@ namespace BMSClone.Models
 
         public string Genre { get; set; }
 
+       // public byte[] poster { get; set; }
         public double Rating { get; set; }
 
         public List<MovieLanguage> MovieLanguages { get; set; }
@@ -28,7 +29,7 @@ namespace BMSClone.Models
         {
             builder.HasKey(x => new { x.MovieId });
 
-            builder.HasOne(x => x.show).WithOne(x => x.movie).HasForeignKey<Show>(x => x.MovieId).OnDelete(DeleteBehavior.ClientSetNull);
+           // builder.HasOne(x => x.show).WithOne(x => x.movie).HasForeignKey<Show>(x => x.MovieId).OnDelete(DeleteBehavior.ClientSetNull);
         }
 
     }

@@ -25,6 +25,25 @@ namespace BMSClone.Controllers
             
         }
 
+        [HttpGet]
+        [Route("GetMoviesByCity")]
+        public async Task<List<Movie>> GetMoviesByCity(int id)
+        {
+            List<Movie> movies = new List<Movie>();
+
+            try { 
+                movies =  await  _dataService.GetMoviesByCityId(id);
+            }
+            catch (Exception ex)
+            { 
+            
+            }
+
+            return movies;
+        
+        }
+
+
         [HttpPost]
         public async Task<ActionResult<Movie>> createMovie(MovieDTO moviedto)
         {
@@ -226,9 +245,8 @@ namespace BMSClone.Controllers
             Seat seat = new Seat();
 
             seat.seatNumber = seatDTO.seatNumber;
-            seat.hallId = seatDTO.seatNumber;
+            seat.hallId = seatDTO.hallId;
             seat.seatType = seatDTO.seatType;
-
             var citye = await _dataService.AddSeats(seat);
 
             return Ok(citye);
@@ -252,6 +270,64 @@ namespace BMSClone.Controllers
                 return StatusCode(500);
             }
         }
+
+        [HttpPost]
+        [Route("CreateShow")]
+        public async Task<ActionResult<Show>> createShow(ShowDTO showDTO)
+        {
+
+           Show shows = new Show();
+
+            shows.start = Convert.ToDateTime(showDTO.start);
+            shows.duration = showDTO.duration;
+            shows.hallid = showDTO.hallid;
+            shows.MovieId = showDTO.MovieId;
+            shows.theatreId = showDTO.theatreId;
+            shows.Name = showDTO.Name;
+
+
+
+            try
+            {
+                int id = await _dataService.AddShows(shows);
+                var seats = await GetSeatsByHallId(showDTO.hallid);
+                // check to see if can add bulk update
+                foreach (var seat in seats)
+                {
+                    await CreateShowSeat(id,seat.SeatId);
+                }
+
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500);
+            }
+        }
+
+
+        [HttpGet]
+        [Route("GetSeatsByHallId")]
+        public async Task<List<Seat>> GetSeatsByHallId(int hallId)
+        {
+
+            Seat seat = new Seat();
+            var seats = await _dataService.GetSeatsByHallId(hallId);
+            return seats;
+        }
+
+        [HttpPost]
+        [Route("CreateShowSeat")]
+        public async Task<ActionResult<ShowSeats>> CreateShowSeat(int ShowId, int SeatId)
+        {
+            ShowSeats showseat = new ShowSeats();
+            showseat.ShowId = ShowId;
+            showseat.SeatId = SeatId;
+            return Ok(await _dataService.AddShowSeats(ShowId,SeatId));
+          
+        }
+
+
 
 
 

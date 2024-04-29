@@ -30,6 +30,12 @@ namespace BMSClone.services
 
         Task<List<Show>> GetShows(int hallid);
 
-        Task<Show> AddShows(Show show);
+        Task<int> AddShows(Show show);
+
+        Task<List<Seat>> GetSeatsByHallId(int hallId);
+
+        Task<ShowSeats> AddShowSeats(int seatId, int showId);
+
+        Task<List<Movie>> GetMoviesByCityId(int id);
     }
 }

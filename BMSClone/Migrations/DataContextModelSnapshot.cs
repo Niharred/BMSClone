@@ -42,7 +42,10 @@ namespace BMSClone.Migrations
             modelBuilder.Entity("BMSClone.Models.Hall", b =>
                 {
                     b.Property<int>("HallId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HallId"), 1L, 1);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -150,7 +153,10 @@ namespace BMSClone.Migrations
             modelBuilder.Entity("BMSClone.Models.Show", b =>
                 {
                     b.Property<int>("ShowId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ShowId"), 1L, 1);
 
                     b.Property<int>("MovieId")
                         .HasColumnType("int");
@@ -172,6 +178,13 @@ namespace BMSClone.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ShowId");
+
+                    b.HasIndex("MovieId")
+                        .IsUnique();
+
+                    b.HasIndex("hallid");
+
+                    b.HasIndex("theatreId");
 
                     b.ToTable("shows");
                 });
@@ -260,17 +273,10 @@ namespace BMSClone.Migrations
 
             modelBuilder.Entity("BMSClone.Models.Hall", b =>
                 {
-                    b.HasOne("BMSClone.Models.Show", "show")
-                        .WithOne("hall")
-                        .HasForeignKey("BMSClone.Models.Hall", "HallId")
-                        .IsRequired();
-
                     b.HasOne("BMSClone.Models.Theatre", "theatre")
                         .WithMany("halls")
                         .HasForeignKey("TheatreId")
                         .IsRequired();
-
-                    b.Navigation("show");
 
                     b.Navigation("theatre");
                 });
@@ -306,13 +312,20 @@ namespace BMSClone.Migrations
                 {
                     b.HasOne("BMSClone.Models.Movie", "movie")
                         .WithOne("show")
-                        .HasForeignKey("BMSClone.Models.Show", "ShowId")
+                        .HasForeignKey("BMSClone.Models.Show", "MovieId")
+                        .IsRequired();
+
+                    b.HasOne("BMSClone.Models.Hall", "hall")
+                        .WithMany("show")
+                        .HasForeignKey("hallid")
                         .IsRequired();
 
                     b.HasOne("BMSClone.Models.Theatre", "theatre")
                         .WithMany("shows")
-                        .HasForeignKey("ShowId")
+                        .HasForeignKey("theatreId")
                         .IsRequired();
+
+                    b.Navigation("hall");
 
                     b.Navigation("movie");
 
@@ -354,6 +367,8 @@ namespace BMSClone.Migrations
             modelBuilder.Entity("BMSClone.Models.Hall", b =>
                 {
                     b.Navigation("seats");
+
+                    b.Navigation("show");
                 });
 
             modelBuilder.Entity("BMSClone.Models.Language", b =>
@@ -376,9 +391,6 @@ namespace BMSClone.Migrations
 
             modelBuilder.Entity("BMSClone.Models.Show", b =>
                 {
-                    b.Navigation("hall")
-                        .IsRequired();
-
                     b.Navigation("showSeats");
                 });
 

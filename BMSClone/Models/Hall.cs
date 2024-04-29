@@ -13,7 +13,7 @@ namespace BMSClone.Models
         public Theatre theatre { get; set; }
         public int TheatreId { get; set; }
 
-        public Show show { get; set; }
+        public List<Show> show { get; set; }
     }
 
 
@@ -24,8 +24,7 @@ namespace BMSClone.Models
         {
             builder.HasKey(x => new { x.HallId });
             builder.HasOne(x => x.theatre).WithMany(x => x.halls).HasForeignKey(x => x.TheatreId).OnDelete(DeleteBehavior.ClientSetNull);
-            builder.HasOne(x => x.show).WithOne(x => x.hall).HasForeignKey<Hall>(x => x.HallId).OnDelete(DeleteBehavior.ClientSetNull);
-
+          
         }
 
     }
